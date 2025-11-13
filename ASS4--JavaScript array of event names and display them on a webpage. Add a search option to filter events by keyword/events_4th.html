@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Digital Literacy Buddy — Events</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Digital Literacy Buddy</h1>
+    <p class="tagline">A human-powered helpdesk for non-tech-savvy people</p>
+  </header>
+  <nav> <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="registration.html">Register</a>
+    <a href="events_4th.html">Events</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <main>
+    <div class="card"><h1>Upcoming Help & Training</h1>
+      <p class="muted">Join local workshops, helpdesk hours, and volunteer training sessions focused on everyday digital tasks.</p>
+    </div>
+
+    <div class="card">
+      <h1>Find Events</h1>
+      <div class="flex-search">
+        <input type="text" id="searchInput" placeholder="Search help or workshops..." class="flex-1">
+        <button class="btn-cta" onclick="searchEvents()">Search</button>
+        <button class="btn-cta secondary" onclick="showAll()">Show All</button>
+      </div>
+    </div>
+    <section class="container" id="dynamicEvents"></section>
+  </main>
+  <footer>© 2025 Digital Literacy Buddy</footer>
+  <script>
+    const events = [
+      {title: "Helpdesk: Phone & Messaging", date: "Every Tue", location: "Community / Phone", desc: "Appointments and walk-ins to learn calls and messaging apps."},
+      {title: "Workshop: Online Banking Basics", date: "Dec 5, 2025", location: "Library Hall", desc: "Hands-on session for safe online banking and payments."},
+      {title: "Volunteer Training", date: "Jan 10, 2026", location: "Training Room", desc: "Learn teaching skills, privacy best-practices, and multilingual support."},
+      {title: "Gov Forms Help", date: "Jan 25, 2026", location: "Community Center", desc: "Assistance filling government forms and submitting online applications."}
+    ];
+    function displayEvents(arr) {
+      document.getElementById('dynamicEvents').innerHTML = arr.map(e => 
+        `<div class="card"><h3>${e.title}</h3><p><strong>Date:</strong> ${e.date} • <strong>Location:</strong> ${e.location}</p><p>${e.desc}</p></div>`
+      ).join('');
+    }
+    function searchEvents() {
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      displayEvents(events.filter(e => e.title.toLowerCase().includes(q) || e.desc.toLowerCase().includes(q) || e.location.toLowerCase().includes(q) || e.date.toLowerCase().includes(q)));
+    }
+    function showAll() {
+      document.getElementById('searchInput').value = '';
+      displayEvents(events);
+    }
+    displayEvents(events);
+  </script>
+</body>
+</html>

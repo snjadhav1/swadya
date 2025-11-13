@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard - Digital Literacy Buddy</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Digital Literacy Buddy</h1>
+        <nav>
+            <a href="/logout">Logout</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="hero">
+            <h2>Help Sessions</h2>
+        </div>
+
+        <div id="list" class="container"></div>
+
+        <div class="card">
+            <h2 class="mt-0">Add / Edit Help Session</h2>
+            <form class="contact-form" id="record-form">
+                <input type="hidden" id="session-id">
+                <input type="text" name="title" id="title" placeholder="Session Title" required>
+                <select name="category" id="category" required>
+                    <option value="" disabled selected>Select Session Type</option>
+                    <option>Computer Basics</option>
+                    <option>Smartphone Help</option>
+                    <option>Internet Safety</option>
+                    <option>Email & Communication</option>
+                    <option>Online Services</option>
+                    <option>Job Search Online</option>
+                    <option>Other</option>
+                </select>
+                <input type="date" name="date" id="date" required>
+                <input type="text" name="venue" id="venue" placeholder="Location" required>
+                <textarea name="description" id="description" placeholder="Description" rows="3"></textarea>
+                <div class="form-actions">
+                    <button type="submit">Save Session</button>
+                    <button type="reset">Clear</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        const listEl = document.getElementById('list');
+        const formEl = document.getElementById('record-form');
+        const sessionIdEl = document.getElementById('session-id');
+
+        async function loadSessions() {
+            try {
+                const response = await fetch('/api/sessions');
+                const sessions = await response.json();
+                renderSessions(sessions);
+            } catch (error) {
+                console.error('Error loading sessions:', error);
+            }
+        }
+
+        function renderSessions(sessions) {
+            if (!sessions || sessions.length === 0) {
+                listEl.innerHTML = '<div class="card"><p>No help sessions yet.</p></div>';
+                return;
+            }
+
+            listEl.innerHTML = sessions.map(s => `
+                <div class="card">
+                    <h3>${escapeHtml(s.title)}</h3>
+                    <p><strong>Type:</strong> ${escapeHtml(s.category)}</p>
+                    <p><strong>Date:</strong> ${formatDate(s.date)}</p>
+                    <p><strong>Location:</strong> ${escapeHtml(s.venue)}</p>
+                    ${s.description ? `<p>${escapeHtml(s.description)}</p>` : ''}
+                    <nav>
+                        <a href="#" onclick="editSession(${s.id}); return false;">Edit</a>
+                        <a href="#" onclick="deleteSession(${s.id}); return false;">Delete</a>
+                    </nav>
+                </div>
+            `).join('');
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str || '';
+            return div.innerHTML;
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return 'Not set';
+            const d = new Date(dateStr);
+            return d.toLocaleDateString();
+        }
+
+        formEl.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const sessionData = {
+                title: document.getElementById('title').value,
+                category: document.getElementById('category').value,
+                date: document.getElementById('date').value,
+                venue: document.getElementById('venue').value,
+                description: document.getElementById('description').value
+            };
+
+            const sessionId = sessionIdEl.value;
+            
+            try {
+                let response;
+                if (sessionId) {
+                    response = await fetch(`/api/sessions/${sessionId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(sessionData)
+                    });
+                } else {
+                    response = await fetch('/api/sessions', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(sessionData)
+                    });
+                }
+
+                if (response.ok) {
+                    formEl.reset();
+                    sessionIdEl.value = '';
+                    loadSessions();
+                }
+            } catch (error) {
+                alert('Error saving session: ' + error.message);
+            }
+        });
+
+        async function editSession(id) {
+            try {
+                const response = await fetch('/api/sessions');
+                const sessions = await response.json();
+                const session = sessions.find(s => s.id === id);
+                
+                if (session) {
+                    sessionIdEl.value = session.id;
+                    document.getElementById('title').value = session.title;
+                    document.getElementById('category').value = session.category;
+                    document.getElementById('date').value = session.date;
+                    document.getElementById('venue').value = session.venue;
+                    document.getElementById('description').value = session.description || '';
+                    formEl.scrollIntoView({ behavior: 'smooth' });
+                }
+            } catch (error) {
+                alert('Error loading session: ' + error.message);
+            }
+        }
+
+        async function deleteSession(id) {
+            if (!confirm('Delete this session?')) return;
+            
+            try {
+                const response = await fetch(`/api/sessions/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    loadSessions();
+                }
+            } catch (error) {
+                alert('Error deleting session: ' + error.message);
+            }
+        }
+
+        formEl.addEventListener('reset', () => {
+            sessionIdEl.value = '';
+        });
+
+        loadSessions();
+    </script>
+</body>
+</html>

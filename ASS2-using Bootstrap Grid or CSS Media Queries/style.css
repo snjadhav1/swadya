@@ -1,0 +1,91 @@
+/* Clean CSS for Digital Literacy Buddy - ASS2 */
+
+/* Variables */
+:root {
+  --primary: #28a745;
+  --text: #333;
+  --muted: #777;
+  --bg: #f8f9fa;
+  --white: #fff;
+  --border: #ddd;
+}
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* Header */
+header {
+  background: var(--white);
+  padding: 2rem;
+  text-align: center;
+  border-bottom: 2px solid var(--border);
+}
+
+header h1 {
+  color: var(--primary);
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.tagline {
+  color: var(--muted);
+}
+
+/* Card */
+.card {
+  background: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Badges */
+.lang-badges .badge {
+  background: var(--bg);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Info Box */
+.info {
+  background: var(--bg);
+  padding: 1rem;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--muted);
+  background: var(--white);
+  border-top: 1px solid var(--border);
+  margin-top: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    padding: 1.5rem;
+  }
+}

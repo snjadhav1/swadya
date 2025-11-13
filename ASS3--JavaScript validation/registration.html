@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Digital Literacy Buddy — Register for Help</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Digital Literacy Buddy</h1>
+    <p class="tagline">A human-powered helpdesk for non-tech-savvy people</p>
+  </header>
+  <nav> <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="registration.html">Register</a>
+    <a href="events_4th.html">Events</a>
+    <a href="contact.html">Contact</a></nav>
+  <main>
+    <div class="card">
+      <h1>Register for Support</h1>
+      <form class="contact-form" method="POST" onsubmit="return validateForm(this)">
+        <label>Name</label>
+        <input type="text" name="name" placeholder="Your name" required>
+        
+        <label>Email</label>
+        <input type="email" name="email" placeholder="you@example.com" required>
+        
+        <label>Mobile</label>
+        <input type="text" name="mobile" placeholder="10-digit mobile number" required>
+        
+        <!-- Role selection: helpseeker or volunteer -->
+        <label>I'm a</label>
+  <div class="lang-badges">
+          <label class="badge"><input type="radio" name="role" value="helpseeker" required> Helpseeker</label>
+          <label class="badge"><input type="radio" name="role" value="volunteer" required> Volunteer</label>
+        </div>
+        
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Enter password" required>
+        
+        <label>Confirm Password</label>
+        <input type="password" name="confirmPassword" placeholder="Re-enter password" required>
+        
+        <button type="submit">Register Now</button>
+      </form>
+    </div>
+  </main>
+  <footer>© 2025 Digital Literacy Buddy</footer>
+
+  <script>
+  // Form validation function - used in login, register, contact
+  function validateForm(form) {
+    // Get form fields
+    var name = form.name ? form.name.value : '';
+    var email = form.email ? form.email.value : '';
+    var mobile = form.mobile ? form.mobile.value : '';
+    var password = form.password ? form.password.value : '';
+    var confirmPassword = form.confirmPassword ? form.confirmPassword.value : '';
+
+    // Validate name (min 2 chars)
+    if (name && name.length < 2) {
+      alert('Name must be 2+ characters');
+      return false;
+    }
+
+    // Validate email format
+    if (email && !/\S+@\S+\.\S+/.test(email)) {
+      alert('Invalid email format');
+      return false;
+    }
+
+    // Validate mobile (10 digits)
+    if (mobile && !/^\d{10}$/.test(mobile)) {
+      alert('Mobile must be 10 digits');
+      return false;
+    }
+
+    // Validate password (min 8 chars)
+    if (password && password.length < 8) {
+      alert('Password must be 8+ characters');
+      return false;
+    }
+
+    // Validate password and confirm password match
+    if (password && confirmPassword && password !== confirmPassword) {
+      alert('Password and Confirm Password must match');
+      return false;
+    }
+
+    // If validations pass, show success message and navigate to home
+    alert('Registration successful');
+    // Redirect to home page
+    window.location.href = 'index.html';
+    // Prevent actual form POST so the page navigation happens here
+    return false;
+  }
+  </script>
+</body>
+</html>

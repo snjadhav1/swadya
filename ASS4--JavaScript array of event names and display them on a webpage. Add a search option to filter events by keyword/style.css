@@ -1,0 +1,173 @@
+/* Clean CSS - ASS4 Events */
+
+/* Variables */
+:root {
+  --primary: #0b6b5a;
+  --secondary: #ff8a4b;
+  --text: #333;
+  --muted: #777;
+  --bg: #f8f9fa;
+  --white: #fff;
+  --border: #ddd;
+}
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* Header */
+header {
+  background: var(--white);
+  padding: 2rem;
+  text-align: center;
+  border-bottom: 2px solid var(--border);
+}
+
+header h1 {
+  color: var(--primary);
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.tagline {
+  color: var(--muted);
+}
+
+/* Nav */
+nav {
+  background: var(--white);
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--border);
+}
+
+nav a {
+  color: var(--text);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: 0.3s;
+}
+
+nav a:hover {
+  background: var(--primary);
+  color: var(--white);
+}
+
+/* Main */
+main {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.card {
+  background: var(--white);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.card h1 {
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+.card h3 {
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+/* Search */
+.flex-search {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.flex-1 {
+  flex: 1;
+  min-width: 200px;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+/* Buttons */
+.btn-cta {
+  background: var(--primary);
+  color: var(--white);
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.btn-cta:hover {
+  opacity: 0.9;
+}
+
+.btn-cta.secondary {
+  background: var(--secondary);
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--muted);
+  background: var(--white);
+  border-top: 1px solid var(--border);
+  margin-top: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .card {
+    padding: 1rem;
+  }
+  
+  nav {
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    padding: 1.5rem;
+  }
+  
+  .flex-search {
+    flex-direction: column;
+  }
+  
+  .flex-1 {
+    min-width: 100%;
+  }
+}

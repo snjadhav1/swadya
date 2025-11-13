@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Digital Literacy Buddy</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="bg-primary text-white text-center py-4">
+    <h1>Digital Literacy Buddy</h1>
+    <p class="mb-0">Empowering Communities Through Technology Support</p>
+  </header>
+  
+  <main class="container my-5">
+    <div class="row">
+      <div class="col-lg-8 mx-auto">
+        <div class="card shadow-lg border-0">
+          <div class="card-body p-5 text-center">
+            <h2 class="mb-4">Welcome to Digital Literacy Buddy</h2>
+            <p class="lead">We connect people who need technology help with volunteers who can assist them.</p>
+            
+            <div class="row mt-4">
+              <div class="col-md-6 mb-3">
+                <div class="info-box">
+                  <h5>For Help Seekers</h5>
+                  <p>Get assistance with computers, smartphones, and internet services</p>
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="info-box">
+                  <h5>For Volunteers</h5>
+                  <p>Share your tech knowledge and help others in your community</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mt-4">
+              <a href="/registration" class="btn btn-primary btn-lg px-5">Register Now</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <footer class="text-center py-3 mt-5">
+    <p class="mb-0">© 2025 Digital Literacy Buddy - Connecting Communities</p>
+  </footer>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

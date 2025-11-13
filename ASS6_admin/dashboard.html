@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Digital Literacy Buddy — Admin Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Digital Literacy Buddy — Admin Dashboard</h1>
+        <nav>
+            <a href="login.html">Logout</a>
+        </nav>
+        <h2 class="mt-20">Help Sessions</h2>
+    </header>
+    <hr class="site-sep">
+
+    <main>
+    
+        <div id="list" class="container"></div>
+
+        <div class="card">
+            <h2 class="mt-0">Add / Edit Help Session</h2>
+            <form class="contact-form" id="record-form">
+                <input type="hidden" id="idx">
+                <input type="text" name="title" id="title" placeholder="Session Title" required>
+                <select name="category" id="category" required>
+                    <option value="" disabled selected>Select Session Type</option>
+                    <option>Computer Basics</option>
+                    <option>Smartphone Help</option>
+                    <option>Internet Safety</option>
+                    <option>Email & Communication</option>
+                    <option>Online Services</option>
+                    <option>Job Search Online</option>
+                    <option>Other</option>
+                </select>
+                <input type="date" name="date" id="date" placeholder="Date" required>
+                <input type="text" name="venue" id="venue" placeholder="Location" required>
+                <textarea name="description" id="description" placeholder="Description" rows="3"></textarea>
+                <div class="form-actions">
+                    <button type="submit">Save Session</button>
+                    <button type="reset">Clear</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+    // localStorage key for sessions (changing from events to sessions for clarity)
+    const KEY = 'sessions';
+
+        const $ = (sel) => document.querySelector(sel);
+        const listEl = $('#list');
+        const formEl = $('#record-form');
+        const idxEl = $('#idx');
+
+        function load() {
+            try { return JSON.parse(localStorage.getItem(KEY)) || []; }
+            catch { return []; }
+        }
+        function save(arr) { localStorage.setItem(KEY, JSON.stringify(arr)); }
+
+        function escapeHtml(str) {
+            return String(str)
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;');
+        }
+
+        // Demo helpers: generate sensible defaults for Digital Literacy sessions
+        const CATEGORIES = ['Computer Basics', 'Smartphone Help', 'Internet Safety', 'Email & Communication', 'Online Services', 'Job Search Online', 'Other'];
+        const TITLES = [
+            'Computer Basics for Beginners',
+            'Smartphone Essentials: Calls, Messages & Apps',
+            'Internet Safety & Privacy Workshop',
+            'Email 101: Create, Send & Organize',
+            'Online Payments & Banking Basics',
+            'Finding Jobs Online: Tips & Portals',
+            'Social Media for Seniors'
+        ];
+        const VENUES = ['Community Center', 'Public Library', 'Computer Lab', 'Senior Center', 'School Hall'];
+        const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
+        function randDateISO() {
+            const d = new Date();
+            d.setDate(d.getDate() + Math.floor(Math.random() * 60) + 1); // next 1-60 days
+            const yyyy = d.getFullYear();
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            const dd = String(d.getDate()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd}`;
+        }
+        function normalize(rec) {
+            return {
+                title: (rec.title || rec.event || rec.name || rand(TITLES)).toString(),
+                category: rec.category || rand(CATEGORIES),
+                date: rec.date || randDateISO(),
+                venue: rec.venue || rand(VENUES),
+                description: rec.description || ''
+            };
+        }
+        function seedOrNormalize() {
+            let data = load();
+            data = (data || []).map(normalize);
+            while (data.length < 3) data.push(normalize({}));
+            save(data);
+        }
+
+        function render() {
+            const data = load();
+            if (!data.length) {
+                listEl.innerHTML = '<div class="card"><p>No help sessions yet.</p></div>';
+                return;
+            }
+            listEl.innerHTML = data.map((r, i) => {
+                const title = r.title || r.event || r.name || 'Untitled Session';
+                const category = r.category || 'Other';
+                const date = r.date || '';
+                const venue = r.venue || '';
+                const desc = r.description || '';
+                const dateFmt = (date && /^\d{4}-\d{2}-\d{2}$/.test(date))
+                  ? date.split('-').reverse().join('-') // yyyy-mm-dd -> dd-mm-yyyy
+                  : date;
+                const dateDisplay = dateFmt || 'Not set';
+                const venueDisplay = venue || 'Not set';
+                return `
+                <div class="card" data-i="${i}">
+                    <h1 class="session-title">${escapeHtml(title)}</h1>
+                    <p><strong>Session Type:</strong> ${escapeHtml(category)}</p>
+                    <p><strong>Date:</strong> ${escapeHtml(dateDisplay)}</p>
+                    <p><strong>Location:</strong> ${escapeHtml(venueDisplay)}</p>
+                    ${desc ? `<p>${escapeHtml(desc)}</p>` : ''}
+                    <nav>
+                        <a href="#" data-action="edit" data-i="${i}">Edit</a>
+                        <a href="#" data-action="delete" data-i="${i}">Delete</a>
+                    </nav>
+                </div>`;
+            }).join('');
+        }
+
+        formEl.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const rec = {
+                title: $('#title').value.trim(),
+                category: $('#category').value || 'Other',
+                date: $('#date').value,
+                venue: $('#venue').value.trim(),
+                description: $('#description').value.trim(),
+            };
+            const data = load();
+            const i = idxEl.value ? parseInt(idxEl.value, 10) : -1;
+            if (i >= 0 && i < data.length) data[i] = rec; else data.push(rec);
+            save(data);
+            formEl.reset();
+            idxEl.value = '';
+            render();
+        });
+
+        formEl.addEventListener('reset', () => { idxEl.value = ''; });
+
+        listEl.addEventListener('click', (e) => {
+            const a = e.target.closest('a[data-action]');
+            if (!a) return;
+            e.preventDefault();
+            const i = parseInt(a.dataset.i, 10);
+            const data = load();
+            if (a.dataset.action === 'edit') {
+                const r = data[i];
+                if (!r) return;
+                $('#title').value = r.title || r.event || r.name || '';
+                $('#category').value = r.category || 'Other';
+                $('#date').value = r.date || '';
+                $('#venue').value = r.venue || '';
+                $('#description').value = r.description || '';
+                idxEl.value = i;
+                formEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else if (a.dataset.action === 'delete') {
+                if (!confirm('Delete this record?')) return;
+                data.splice(i, 1);
+                save(data);
+                render();
+            }
+        });
+
+        // Ensure we show 3 sessions with complete info
+        seedOrNormalize();
+        render();
+    </script>
+</body>
+</html>
