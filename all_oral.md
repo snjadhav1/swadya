@@ -947,7 +947,8 @@ ________________________________________
 
 
 
-ASSIGNMENT 2 
+ASSIGNMENT 2  
+
 
 Make any one page from Assignment 1 responsive using Bootstrap Grid or CSS Media Queries.	
 
@@ -2760,4 +2761,5 @@ Final quick checklist you can hand to teacher (copy-paste)
 •	Test pages: /admin/login, /admin/dashboard, participants page
 •	(Optional) Migrate local DB via mysqldump if needed
 ________________________________________
+
 
