@@ -19,11 +19,45 @@ def home():
 @app.route('/registration', methods=['GET', 'POST'])
 def registration():
     if request.method == 'POST':
+        # Server-side validation
+        name = request.form.get('name', '').strip()
+        email = request.form.get('email', '').strip()
+        mobile = request.form.get('mobile', '').strip()
+        role = request.form.get('role', '').strip()
+        password = request.form.get('password', '')
+        confirm = request.form.get('confirmPassword', '')
+        
+        if not name or len(name) < 2:
+            flash('Name must be at least 2 characters')
+            return redirect('/registration')
+        if not email or '@' not in email:
+            flash('Valid email required')
+            return redirect('/registration')
+        if not mobile or not mobile.isdigit() or len(mobile) != 10:
+            flash('Mobile must be exactly 10 digits')
+            return redirect('/registration')
+        if not role:
+            flash('Please select a role')
+            return redirect('/registration')
+        if not password or len(password) < 8:
+            flash('Password must be at least 8 characters')
+            return redirect('/registration')
+        if password != confirm:
+            flash('Passwords do not match')
+            return redirect('/registration')
+        
         db = get_db()
         cursor = db.cursor()
         try:
+            # Check if email already exists
+            cursor.execute("SELECT email FROM registrations WHERE email = %s", (email,))
+            existing = cursor.fetchone()
+            if existing:
+                flash('Email already exists. Please use a different email.')
+                return redirect('/registration')
+            
             cursor.execute("INSERT INTO registrations (name, email, mobile, role, password) VALUES (%s, %s, %s, %s, %s)",
-                           (request.form['name'], request.form['email'], request.form['mobile'], request.form.get('role', ''), request.form['password']))
+                           (name, email, mobile, role, password))
             db.commit()
         except mysql.connector.errors.ProgrammingError as e:
             # Likely the `role` column is missing in the DB schema. Inform the developer and avoid a 500.
