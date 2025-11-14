@@ -15,15 +15,15 @@
   <main>
     <div class="card">
       <h1>User Registration</h1>
-      <form class="contact-form" method="POST" action="/registration">
+      <form class="contact-form" method="POST" action="/registration" onsubmit="return validate()">
         <label>Name</label>
-        <input type="text" name="name" placeholder="Your name" required>
+        <input type="text" name="name" id="name" placeholder="Your name" required>
         
         <label>Email</label>
-        <input type="email" name="email" placeholder="you@example.com" required>
+        <input type="email" name="email" id="email" placeholder="you@example.com" required>
         
         <label>Mobile</label>
-        <input type="text" name="mobile" placeholder="10-digit mobile number" required>
+        <input type="text" name="mobile" id="mobile" placeholder="10-digit mobile number" required>
         
         <label>Support type</label>
         <!-- Role selection: helpseeker or volunteer -->
@@ -34,10 +34,10 @@
         </div>
         
         <label>Password</label>
-        <input type="password" name="password" placeholder="Enter password" required>
+        <input type="password" name="password" id="password" placeholder="Enter password" required>
         
         <label>Confirm Password</label>
-        <input type="password" name="confirmPassword" placeholder="Re-enter password" required>
+        <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Re-enter password" required>
         
         <button type="submit">Register Now</button>
       </form>
@@ -52,25 +52,26 @@
       </script>
     {% endif %}
   {% endwith %}
+  
+  <script>
+  function validate() {
+    var name = document.getElementById('name').value.trim();
+    var email = document.getElementById('email').value.trim();
+    var mobile = document.getElementById('mobile').value.trim();
+    var password = document.getElementById('password').value;
+    var confirm = document.getElementById('confirmPassword').value;
+    
+    if (name.length < 2) { alert('Name must be at least 2 characters'); return false; }
+    if (!email.includes('@')) { alert('Valid email required'); return false; }
+    if (!/^\d{10}$/.test(mobile)) { alert('Mobile must be exactly 10 digits'); return false; }
+    if (password.length < 8) { alert('Password must be at least 8 characters'); return false; }
+    if (password !== confirm) { alert('Passwords do not match'); return false; }
+    
+    return true;
+  }
+  </script>
 </body>
 </html>
 
 
-<!-- CREATE DATABASE event_db1;
 
-USE event_db1;
-
-DROP TABLE IF EXISTS registrations;
-
-CREATE TABLE registrations (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL,
-  mobile VARCHAR(20) NOT NULL,
-  role VARCHAR(50) NOT NULL,
-  password VARCHAR(255) NOT NULL,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  INDEX idx_email (email),
-  INDEX idx_created_at (created_at),
-  INDEX idx_role (role)
-); -->
