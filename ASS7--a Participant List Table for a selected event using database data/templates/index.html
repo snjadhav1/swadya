@@ -6,30 +6,32 @@
 </head>
 <body>
     <header>
-        <h1>Digital Literacy Buddy — Participants</h1>
+        <h1>Digital Literacy Buddy — Event Participants</h1>
         <nav>
-            <label for="filter">Filter by role:</label>
-            <select id="filter" onchange="location='?role='+this.value">
-                <option value="ALL" {% if selected=='ALL' %}selected{% endif %}>ALL</option>
-                <option value="helpseeker" {% if selected=='helpseeker' %}selected{% endif %}>Helpseekers</option>
-                <option value="volunteer" {% if selected=='volunteer' %}selected{% endif %}>Volunteers</option>
+            <label for="filter">Select Event:</label>
+            <select id="filter" onchange="location='?event='+this.value">
+                <option value="ALL" {% if selected=='ALL' %}selected{% endif %}>All Events</option>
+                {% for event in events %}
+                <option value="{{ event.id }}" {% if selected==event.id|string %}selected{% endif %}>{{ event.title }}</option>
+                {% endfor %}
             </select>
         </nav>
     </header>
     
     <main>
         <div class="card">
-            <h1>Showing: {{ selected }}</h1>
+            <h1>Participants List</h1>
+            <p>{% if selected=='ALL' %}Showing all events{% else %}Filtered by event{% endif %}</p>
         </div>
         
         <div id="dynamicEvents" class="container">
             {% for p in data %}
             <div class="card">
                 <h1>{{ p.name }}</h1>
+                <p><strong>Event:</strong> {{ p.event_title }}</p>
                 <p><strong>Email:</strong> {{ p.email }}</p>
                 <p><strong>Mobile:</strong> {{ p.mobile }}</p>
-                <p><strong>Role:</strong> {{ p.role }}</p>
-                <p><strong>Date:</strong> {{ p.created_at }}</p>
+                <p><strong>Registered:</strong> {{ p.created_at }}</p>
             </div>
             {% endfor %}
         </div>
